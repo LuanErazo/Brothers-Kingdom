@@ -72,6 +72,7 @@ public class Castillo {
 		personasVivas.removeFirst();
 
 		int postabla = Jugador.posicionTabla();
+	
 		p.setNumPosGen(postabla);
 		p.setPos(pos);
 		return p;

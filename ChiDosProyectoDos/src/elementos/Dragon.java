@@ -6,6 +6,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 import usuario.DatosGuardar;
+import usuario.Jugador;
 
 public class Dragon {
 	
@@ -18,11 +19,11 @@ public class Dragon {
     
     public Dragon(PApplet app) {
     	this.app = app;
-    		float x1 = (float) (26+(104.5*5));
-    		float y1 = 394;
+    		float x1 = Jugador.calculoGeneralX(5);
+    		float y1 = Jugador.calculoGeneralY();
     		
     		app.rect(x1+50, y1+50, 10, 10);	    				
-    		pos = new PVector(x1 + 50, y1-80);
+    		pos = new PVector(x1, y1-71);
 		
     	image = app.loadImage("../data/img/Dragoncito.png");
 	}
@@ -49,5 +50,9 @@ public class Dragon {
     
     public boolean isTurno() {
 		return turno;
+	}
+    
+    public PVector getPos() {
+		return pos;
 	}
 }

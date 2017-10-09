@@ -19,6 +19,15 @@ public class FondoAnimations {
 
 	private float x = 340;
 	private float y = 600;
+	// variables de posicion de la nube Uno
+	private float posXnUno = 0;
+	private float posYnUno = 20;
+	// variables de posicion de la nube Dos
+	private float posXnDos = 200;
+	private float posYnDos = 100;
+	// variables de posicion de la nube Tres
+	private float posXnTres = 0;
+	private float posYnTres = 50;
 
 	private PImage chat;
 
@@ -39,17 +48,42 @@ public class FondoAnimations {
 	public void drawPintar(Jugador player) {
 		app.imageMode(PConstants.CORNER);
 		app.image(fondo, 0, 0);
+		// animacion de la nube uno
+
+		posXnUno += 1;
+
+		if (posXnUno >= 1270) {
+			posXnUno = -330;
+		}
+
+		// animacion de la nube dos
+
+		posXnDos += 1.5;
+		if (posXnDos >= 1270) {
+			posXnDos = -330;
+		}
+
+		// animacion de la nube tres
+
+		posXnTres += 2.5;
+		if (posXnTres <= 1270) {
+			posXnTres = -330;
+		}
+
+		app.image(nubeUno, posXnUno, posYnUno);
+		app.image(nubeDos, posXnDos, posYnDos);
+		app.image(nubeTres, posXnTres, posYnTres);
 
 		app.imageMode(PConstants.CENTER);
 
 		if (player.isTurnoPrincipal()) {
-			app.image(passButton, x, y);	
+			app.image(passButton, x, y);
 			app.image(shotButton, x + 550, y);
 		}
-		
+
 		if (player.isTurnoConciliacion()) {
 			app.image(letIn, x, y);
-			app.image(letOut, x+ 550, y);
+			app.image(letOut, x + 550, y);
 
 		}
 
@@ -104,6 +138,7 @@ public class FondoAnimations {
 	public void flecha(Jugador player) {
 		if (player.isTurnoPrincipal()) {
 			app.image(flecha, Jugador.calculoGeneralX(), Jugador.calculoGeneralY() - 100);
+
 		}
 	}
 

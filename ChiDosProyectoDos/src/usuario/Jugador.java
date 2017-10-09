@@ -20,7 +20,6 @@ public class Jugador implements Observer {
 	private boolean turnoConciliacion;
 
 	private PVector posLanzamiento;
-	private PVector posLanzamientoLlegada;
 
 	private Personita suelta;
 	private String mensajeJugador;
@@ -31,7 +30,6 @@ public class Jugador implements Observer {
 	public Jugador(PApplet app, int jugador) {
 		this.app = app;
 		posLanzamiento = new PVector();
-		posLanzamientoLlegada = new PVector();
 		this.jugador = jugador;
 
 		castillo = new Castillo(app, jugador);
@@ -56,13 +54,13 @@ public class Jugador implements Observer {
 		if (turnoPrincipal) {
 
 			for (int i = 0; i < 12; i++) {
-				float x1 = calculoPosX(i);
-				float x2 = x1;
-				float y1 = calculoGeneralY();
+				float x1 = (26 + (104.5f * i));
+				float x2 = calculoPosX(i);
+				float y1 = 394;
 				float y2 = y1 + 85;
 
 				if (mx > x1 && my > y1 && mx < x2 + 100 && my < y2) {
-					posLanzamiento.set(x1, y1);
+					posLanzamiento.set(calculoGeneralX(i), calculoGeneralY()-71);
 				}
 
 			}
@@ -90,7 +88,7 @@ public class Jugador implements Observer {
 	}
 	
 	public static float calculoGeneralY() {
-		return 394+((394+85)-394)/2;
+		return (394+((394+85)-394)/2);
 
 	}
 
@@ -117,7 +115,7 @@ public class Jugador implements Observer {
 
 
 	public Personita disparar() {
-		PVector posN = new PVector(posLanzamiento.x, posLanzamiento.y);
+		PVector posN = posLanzamiento.copy();
 		return castillo.disparar(posN);
 	}
 
@@ -137,8 +135,8 @@ public class Jugador implements Observer {
 		return posLanzamiento;
 	}
 
-	public PVector getPosLanzamientoLlegada() {
-		return posLanzamientoLlegada;
+	public PVector getPosLanzamiento() {
+		return posLanzamiento;
 	}
 
 	public int getJugador() {

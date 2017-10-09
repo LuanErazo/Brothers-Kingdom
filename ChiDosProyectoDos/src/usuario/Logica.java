@@ -10,6 +10,7 @@ import elementos.Dragon;
 import elementos.Personita;
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PVector;
 import usuario.Carga;
 import usuario.FondoAnimations;
 import usuario.Jugador;
@@ -90,13 +91,30 @@ public class Logica implements Observer {
 			player.click(mx, my);
 
 			if (fondo.DerBoton(mx, my)) {
-				
-				Personita suelta = player.disparar();
-				personasSueltas.addLast(suelta);
+				PVector pPos = player.getPosLanzamiento();
+				if (!pPos.equals(dragon.getPos())) {
 
-				cliente.enviarMensaje(
-						"enviopos " + suelta.getName() + " " + suelta.getPos().x + " " + suelta.getPos().y);
+					if (jugadorUno) {
 
+						if (player.getPosLanzamiento().x > Jugador.calculoGeneralX(5)) {
+							Personita suelta = player.disparar();
+							personasSueltas.addLast(suelta);
+
+							cliente.enviarMensaje(
+									"enviopos " + suelta.getName() + " " + suelta.getPos().x + " " + suelta.getPos().y);
+						}
+
+					} else {
+
+						if (player.getPosLanzamiento().x < Jugador.calculoGeneralX(5)) {
+							Personita suelta = player.disparar();
+							personasSueltas.addLast(suelta);
+							cliente.enviarMensaje(
+									"enviopos " + suelta.getName() + " " + suelta.getPos().x + " " + suelta.getPos().y);
+
+						}
+					}
+				}
 			}
 
 			if (fondo.DerBoton(mx, my) || fondo.IzqBoton(mx, my)) {
@@ -118,7 +136,7 @@ public class Logica implements Observer {
 						Jugador.calculoGeneralY());
 				distancias[i] = dist;
 			}
-			
+
 			for (int i = 0; i < personasSueltas.size(); i++) {
 				Personita p = personasSueltas.get(i);
 				float dist = PApplet.dist(p.getPos().x, p.getPos().y, Jugador.calculoGeneralX(minVal),

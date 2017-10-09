@@ -18,6 +18,8 @@ public class Castillo {
 	private DatosGuardar datos;
 	private String lanzandoA;
 	private String texto[];
+	
+	private PVector prepos;
 
 	public Castillo(PApplet app, int player) {
 		this.app = app;
@@ -42,6 +44,7 @@ public class Castillo {
 			System.out.println("jugador no: "+ player +" " +  personita.getName());
 		}
 
+		prepos = pos.copy();
 	}
 
 	public void pintar() {
@@ -54,6 +57,8 @@ public class Castillo {
 	}
 
 	public Personita recibir(Personita p) {
+		p.setPos(prepos);
+		personasVivas.addLast(p);
 		return p;
 	}
 
@@ -74,18 +79,6 @@ public class Castillo {
 	
 	public String relacionPersonaEnviada(){
 		return personasVivas.getFirst().getRelacion();
-	}
-
-	public Personita dispararLLegada(Personita p, PVector pos) {
-		Personita pp = p;
-		for (int i = 0; i < personasVivas.size(); i++) {
-			Personita per = personasVivas.get(i);
-			if (pp.equals(per)) {
-				personasVivas.remove(per);				
-			}
-		}
-		pp.setPos(pos);
-		return pp;
 	}
 
 	public Personita comer(Personita p) {

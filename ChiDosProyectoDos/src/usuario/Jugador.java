@@ -50,19 +50,19 @@ public class Jugador implements Observer {
 	}
 
 	public void click(float mx, float my) {
+		mouseX = mx;
+		mouseY = my;
 
 		if (turnoPrincipal) {
-			mouseX = mx;
-			mouseY = my;
 
 			for (int i = 0; i < 12; i++) {
 				float x1 = calculoPosX(i);
 				float x2 = x1;
-				float y1 = 394;
+				float y1 = calculoGeneralY();
 				float y2 = y1 + 85;
 
 				if (mx > x1 && my > y1 && mx < x2 + 100 && my < y2) {
-					posLanzamiento.set(x1 + 51, y1 - 30);
+					posLanzamiento.set(x1, y1);
 				}
 
 			}
@@ -80,6 +80,11 @@ public class Jugador implements Observer {
 
 	public static float calculoGeneralX() {
 		int i = posicionTabla();
+		return calculoPosX(i)+50;
+
+	}
+	
+	public static float calculoGeneralX(int i) {
 		return calculoPosX(i)+50;
 
 	}
@@ -110,11 +115,6 @@ public class Jugador implements Observer {
 
 	}
 
-	public Personita cambiosCastillo() {
-		PVector posN = posLanzamientoLlegada.copy();
-		Personita p = suelta;
-		return castillo.dispararLLegada(p, posN);
-	}
 
 	public Personita disparar() {
 		PVector posN = new PVector(posLanzamiento.x, posLanzamiento.y);

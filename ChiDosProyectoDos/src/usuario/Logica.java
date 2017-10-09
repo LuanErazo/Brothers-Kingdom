@@ -24,6 +24,7 @@ public class Logica implements Observer {
 	private Jugador player;
 	private FondoAnimations fondo;
 
+	private int minVal;
 	private ComunicacionCliente cliente;
 
 	private Carga carga;
@@ -41,9 +42,12 @@ public class Logica implements Observer {
 
 		if (jugadorUno) {
 			numJugador = 1;
+			minVal = 0;
 		} else {
 			numJugador = 2;
+			minVal = 10;
 		}
+
 		player = new Jugador(app, numJugador);
 
 		this.cliente.addObserver(this);
@@ -55,6 +59,7 @@ public class Logica implements Observer {
 	}
 
 	public void draw() {
+		key();
 		fondo.drawPintar(player);
 		fondo.textos(player);
 
@@ -67,24 +72,25 @@ public class Logica implements Observer {
 		for (Personita personita : personasSueltas) {
 			personita.pintar();
 		}
-		
-		
+
 		fondo.flecha(player);
 
 	}
 
 	public void click(float mx, float my) {
-
-		jugador(mx, my);
+		if (!dragon.isTurno()) {
+			jugador(mx, my);
+		}
 	}
 
 	private void jugador(float mx, float my) {
-		if (player.isTurnoPrincipal()) {
+		castillo = player.getCastillo();
 
+		if (player.isTurnoPrincipal()) {
 			player.click(mx, my);
 
 			if (fondo.DerBoton(mx, my)) {
-				castillo = player.getCastillo();
+				
 				Personita suelta = player.disparar();
 				personasSueltas.addLast(suelta);
 
@@ -95,9 +101,38 @@ public class Logica implements Observer {
 
 			if (fondo.DerBoton(mx, my) || fondo.IzqBoton(mx, my)) {
 				cliente.enviarMensaje("cambioTurno");
-				player.setTurnoPrincipal(false);
-				player.setTurnoConciliacion(true);
+				// player.setTurnoPrincipal(false);
+				// player.setTurnoConciliacion(true);
 
+			}
+
+		}
+
+		if (player.isTurnoConciliacion()) {
+			// System.out.println("conciliacion");
+			float distancias[] = new float[personasSueltas.size()];
+
+			for (int i = 0; i < personasSueltas.size(); i++) {
+				Personita p = personasSueltas.get(i);
+				float dist = PApplet.dist(p.getPos().x, p.getPos().y, Jugador.calculoGeneralX(minVal),
+						Jugador.calculoGeneralY());
+				distancias[i] = dist;
+			}
+			
+			for (int i = 0; i < personasSueltas.size(); i++) {
+				Personita p = personasSueltas.get(i);
+				float dist = PApplet.dist(p.getPos().x, p.getPos().y, Jugador.calculoGeneralX(minVal),
+						Jugador.calculoGeneralY());
+
+				if (fondo.IzqBoton(mx, my)) {
+					float min = PApplet.min(distancias);
+					System.out.println(min);
+					if (min == dist) {
+						Personita pp = castillo.recibir(p);
+						personasSueltas.remove(pp);
+					}
+
+				}
 			}
 
 		}
@@ -151,6 +186,22 @@ public class Logica implements Observer {
 			app.line(x1, y1, x2, y2);
 		}
 
+	}
+
+	private void key() {
+		if (app.keyPressed) {
+			if (app.key == '1') {
+				player.setTurnoPrincipal(false);
+				player.setTurnoConciliacion(true);
+
+			}
+			if (app.key == '2') {
+				player.setTurnoPrincipal(true);
+				player.setTurnoConciliacion(false);
+
+			}
+
+		}
 	}
 
 }

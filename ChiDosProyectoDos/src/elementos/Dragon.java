@@ -46,4 +46,8 @@ public class Dragon {
     	
     	return p;
     }
+    
+    public boolean isTurno() {
+		return turno;
+	}
 }

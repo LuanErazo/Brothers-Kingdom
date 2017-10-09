@@ -85,6 +85,7 @@ public class FondoAnimations {
 			app.image(letIn, x, y);
 			app.image(letOut, x + 550, y);
 			
+			
 		}
 
 	}

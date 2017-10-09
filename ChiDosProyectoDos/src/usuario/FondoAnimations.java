@@ -84,6 +84,7 @@ public class FondoAnimations {
 		if (player.isTurnoConciliacion()) {
 			app.image(letIn, x, y);
 			app.image(letOut, x + 550, y);
+			
 
 		}
 

@@ -98,10 +98,10 @@ public class Jugador implements Observer {
 
 	}
 
-	private static int posicionTabla() {
+	public static int posicionTabla() {
 		int ret = 0;
 		for (int i = 0; i < 12; i++) {
-			float x1 = calculoPosX(i);
+			float x1 = (26 + (104.5f * i));
 			float x2 = x1;
 			float y1 = 394;
 			float y2 = y1 + 85;
@@ -120,6 +120,7 @@ public class Jugador implements Observer {
 	}
 
 	public Personita disparar() {
+
 		PVector posN = posLanzamiento.copy();
 		return castillo.disparar(posN);
 	}

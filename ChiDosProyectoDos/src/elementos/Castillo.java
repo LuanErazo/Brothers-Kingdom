@@ -8,6 +8,7 @@ import processing.core.PImage;
 import processing.core.PVector;
 import usuario.Carga;
 import usuario.DatosGuardar;
+import usuario.Jugador;
 
 public class Castillo {
 
@@ -69,6 +70,9 @@ public class Castillo {
 	public Personita disparar(PVector pos) {
 		Personita p = personasVivas.getFirst();
 		personasVivas.removeFirst();
+
+		int postabla = Jugador.posicionTabla();
+		p.setNumPosGen(postabla);
 		p.setPos(pos);
 		return p;
 	}

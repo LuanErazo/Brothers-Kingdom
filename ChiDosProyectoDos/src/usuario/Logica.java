@@ -105,6 +105,7 @@ public class Logica implements Observer {
 
 						if (player.getPosLanzamiento().x > Jugador.calculoGeneralX(5)) {
 							Personita suelta = player.disparar();
+							System.out.println("posisiocn matrix suelta"+suelta.getNumPosGen());
 							personasSueltas.addLast(suelta);
 
 							cliente.enviarMensaje(
@@ -181,16 +182,19 @@ public class Logica implements Observer {
 
 	private void dragon() {
 		if (personasSueltas.size() > 0) {
-
 			if (dragon.getTimerDragon() == 1) {
 				System.out.println("dragonturn");
 				Personita p = perMinimDist(dragon.getPos().x, dragon.getPos().y);
 				dragon.moverPersona(p);
+				dragon.setMovpos(p.getNumPosGen());
 				personasSueltas.remove(dragon.comer(p));
 				dragon.setTimerDragon(0);
 			}
+		} else {
+			
+			dragon.setTurno(dragon.moverRan());
 		}
-
+		
 	}
 
 	@Override

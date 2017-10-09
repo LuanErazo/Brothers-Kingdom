@@ -84,7 +84,7 @@ public class lServer implements Observer, Runnable {
 			}
 			
 			if (mensaje.contains("cambioTurno")) {
-				
+				reenviarMensajeTodos(mensaje);
 			}
 		}
 
@@ -99,6 +99,23 @@ public class lServer implements Observer, Runnable {
 				reenvios++;
 			}
 
+		}
+		System.out.println("[Servidor] Se reenvia la nota a : " + reenvios + " clientes");
+	}
+	
+	private void reenviarMensajeTodos(String mensaje) {
+		int reenvios = 0;
+//		for (Iterator<Comunicacion> iterator = clientes.iterator(); iterator.hasNext();) {
+//			Comunicacion com = (Comunicacion) iterator.next();
+//				com.enviarMensaje(mensaje);
+//				reenvios++;
+//
+//		}
+		for (int i = 0; i < clientes.size(); i++) {
+			Comunicacion com = (Comunicacion) clientes.get(i);
+			com.enviarMensaje(mensaje);
+			reenvios++;
+			
 		}
 		System.out.println("[Servidor] Se reenvia la nota a : " + reenvios + " clientes");
 	}

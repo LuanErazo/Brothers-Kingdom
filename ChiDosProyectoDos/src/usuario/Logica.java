@@ -32,12 +32,15 @@ public class Logica implements Observer {
 	private Castillo castillo;
 	private boolean jugadorUno;
 
-	public Logica(PApplet app, boolean jugadorUno, ComunicacionCliente cliente) {
+	public Logica(PApplet app, boolean jugadorUno) {
+		cliente = new ComunicacionCliente();
+		cliente.addObserver(this);
+		
 		this.app = app;
 		this.jugadorUno = jugadorUno;
 		carga = new Carga(app);
 		fondo = new FondoAnimations(app);
-		this.cliente = cliente;
+		
 
 		int numJugador = 0;
 
@@ -135,8 +138,8 @@ public class Logica implements Observer {
 
 			if (fondo.DerBoton(mx, my) || fondo.IzqBoton(mx, my)) {
 				cliente.enviarMensaje("cambioTurno");
-				// player.setTurnoPrincipal(false);
-				// player.setTurnoConciliacion(true);
+				 player.setTurnoPrincipal(false);
+				 player.setTurnoConciliacion(false);
 
 			}
 
@@ -200,12 +203,19 @@ public class Logica implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		String mensaje = (String) arg;
-
+		System.out.println("llegar algo");
 		if (mensaje.contains("activar")) {
 
 		}
 		if (mensaje.contains("dragon")) {
 			dragon.setTurno(true);
+		}
+		if (mensaje.contains("cambioTurno")) {
+			System.out.println("llego el cambio directo");
+			player.setTurnoPrincipal(true);
+		}
+		if (mensaje.contains("conciliacion")) {
+			player.setTurnoConciliacion(true);
 		}
 
 	}
@@ -225,9 +235,6 @@ public class Logica implements Observer {
 		return clock;
 	}
 
-	private void cambioTurno() {
-
-	}
 
 	private void pintarObjects() {
 

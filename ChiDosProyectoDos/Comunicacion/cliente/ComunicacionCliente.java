@@ -44,6 +44,7 @@ public class ComunicacionCliente extends Observable implements Runnable {
 			String mensaje = entrada.readUTF();
 
 			setChanged();
+			System.out.println("CLIENTE LLEGO: " + mensaje);
 			notifyObservers(mensaje);
 			clearChanged();
 

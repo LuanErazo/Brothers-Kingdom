@@ -26,9 +26,8 @@ public class MainOne extends PApplet{
 	public void setup() {
 		app = this;
 		
-		cliente =  new ComunicacionCliente();
 //		log = new LogicaOne();
-		loggi = new Logica(this, true, cliente);
+		loggi = new Logica(this, true);
 	}
 	
 	@Override

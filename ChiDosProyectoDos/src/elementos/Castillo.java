@@ -41,10 +41,6 @@ public class Castillo {
 			}
 		}
 
-		for (Personita personita : personasVivas) {
-			System.out.println("jugador no: "+ player +" " +  personita.getName());
-		}
-
 		prepos = pos.copy();
 	}
 

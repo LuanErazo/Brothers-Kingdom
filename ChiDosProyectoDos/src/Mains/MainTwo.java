@@ -25,8 +25,7 @@ public class MainTwo extends PApplet{
 	@Override
 	public void setup() {
 		app = this;
-		cliente = new ComunicacionCliente();
-		loggi = new Logica(this, false, cliente);
+		loggi = new Logica(this, false);
 	}
 	
 	@Override

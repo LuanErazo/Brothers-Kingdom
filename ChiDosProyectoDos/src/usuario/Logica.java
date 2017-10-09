@@ -60,6 +60,7 @@ public class Logica implements Observer {
 	}
 
 	public void draw() {
+		timer();
 		key();
 		fondo.drawPintar(player);
 		fondo.textos(player);
@@ -75,13 +76,16 @@ public class Logica implements Observer {
 		}
 
 		fondo.flecha(player);
-
+		if (dragon.isTurno()) {
+			dragon();
+		}
 	}
 
 	public void click(float mx, float my) {
 		if (!dragon.isTurno()) {
 			jugador(mx, my);
 		}
+
 	}
 
 	private void jugador(float mx, float my) {
@@ -92,7 +96,10 @@ public class Logica implements Observer {
 
 			if (fondo.DerBoton(mx, my)) {
 				PVector pPos = player.getPosLanzamiento();
-				if (!pPos.equals(dragon.getPos())) {
+				PVector pUno = Jugador.vectorCalculo(0);
+				PVector pDos = Jugador.vectorCalculo(10);
+
+				if (pPos.equals(dragon.getPos()) == false && pPos.equals(pUno) == false && pPos.equals(pDos) == false) {
 
 					if (jugadorUno) {
 
@@ -102,6 +109,9 @@ public class Logica implements Observer {
 
 							cliente.enviarMensaje(
 									"enviopos " + suelta.getName() + " " + suelta.getPos().x + " " + suelta.getPos().y);
+						} else {
+							System.out.println("no puedes disparar aqui Valor Minimo");
+
 						}
 
 					} else {
@@ -112,8 +122,13 @@ public class Logica implements Observer {
 							cliente.enviarMensaje(
 									"enviopos " + suelta.getName() + " " + suelta.getPos().x + " " + suelta.getPos().y);
 
+						} else {
+							System.out.println("no puedes disparar aqui Valor Minimo");
+
 						}
 					}
+				} else {
+					System.out.println("no puedes disparar aqui Dragon");
 				}
 			}
 
@@ -127,36 +142,54 @@ public class Logica implements Observer {
 		}
 
 		if (player.isTurnoConciliacion()) {
-			// System.out.println("conciliacion");
-			float distancias[] = new float[personasSueltas.size()];
 
-			for (int i = 0; i < personasSueltas.size(); i++) {
-				Personita p = personasSueltas.get(i);
-				float dist = PApplet.dist(p.getPos().x, p.getPos().y, Jugador.calculoGeneralX(minVal),
-						Jugador.calculoGeneralY());
-				distancias[i] = dist;
-			}
-
-			for (int i = 0; i < personasSueltas.size(); i++) {
-				Personita p = personasSueltas.get(i);
-				float dist = PApplet.dist(p.getPos().x, p.getPos().y, Jugador.calculoGeneralX(minVal),
-						Jugador.calculoGeneralY());
-
-				if (fondo.IzqBoton(mx, my)) {
-					float min = PApplet.min(distancias);
-					System.out.println(min);
-					if (min == dist) {
-						Personita pp = castillo.recibir(p);
-						personasSueltas.remove(pp);
+			if (fondo.IzqBoton(mx, my)) {
+				if (personasSueltas.size() > 0) {
+					Personita pp = perMinimDist(Jugador.calculoGeneralX(minVal), Jugador.calculoGeneralY());
+					if (player.getJugador() != pp.getJugador()) {
+						Personita p = castillo.recibir(pp);
+						personasSueltas.remove(p);
 					}
-
 				}
 			}
 
 		}
 	}
 
+	private Personita perMinimDist(float Xevalua, float Yevalua) {
+		float distancias[] = new float[personasSueltas.size()];
+
+		for (int i = 0; i < personasSueltas.size(); i++) {
+			Personita p = personasSueltas.get(i);
+			float dist = PApplet.dist(p.getPos().x, p.getPos().y, Xevalua, Yevalua);
+			distancias[i] = dist;
+		}
+
+		for (int i = 0; i < personasSueltas.size(); i++) {
+			Personita p = personasSueltas.get(i);
+			float dist = PApplet.dist(p.getPos().x, p.getPos().y, Xevalua, Yevalua);
+
+			float min = PApplet.min(distancias);
+			System.out.println(min);
+			if (min == dist) {
+				return p;
+			}
+
+		}
+		return null;
+	}
+
 	private void dragon() {
+		if (personasSueltas.size() > 0) {
+
+			if (dragon.getTimerDragon() == 1) {
+				System.out.println("dragonturn");
+				Personita p = perMinimDist(dragon.getPos().x, dragon.getPos().y);
+				dragon.moverPersona(p);
+				personasSueltas.remove(dragon.comer(p));
+				dragon.setTimerDragon(0);
+			}
+		}
 
 	}
 
@@ -173,7 +206,7 @@ public class Logica implements Observer {
 
 	}
 
-	public static int timer() {
+	public int timer() {
 
 		if (app.millis() - cTime >= 1000) {
 			cTime = app.millis();
@@ -181,6 +214,7 @@ public class Logica implements Observer {
 		}
 
 		if (timing != time) {
+			dragon.sumaTimerDragon();
 			timing = time;
 			clock++;
 		}
@@ -211,11 +245,19 @@ public class Logica implements Observer {
 			if (app.key == '1') {
 				player.setTurnoPrincipal(false);
 				player.setTurnoConciliacion(true);
+				dragon.setTurno(false);
 
 			}
 			if (app.key == '2') {
 				player.setTurnoPrincipal(true);
 				player.setTurnoConciliacion(false);
+				dragon.setTurno(false);
+
+			}
+			if (app.key == '3') {
+				player.setTurnoPrincipal(false);
+				player.setTurnoConciliacion(false);
+				dragon.setTurno(true);
 
 			}
 

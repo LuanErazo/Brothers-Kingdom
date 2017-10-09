@@ -16,9 +16,11 @@ public class Dragon {
 	private LinkedList<Personita> personasComidas;
     private DatosGuardar datos;
     private boolean turno;
+    private int timerDragon;
     
     public Dragon(PApplet app) {
     	this.app = app;
+    	personasComidas = new LinkedList<>();
     		float x1 = Jugador.calculoGeneralX(5);
     		float y1 = Jugador.calculoGeneralY();
     		
@@ -29,7 +31,11 @@ public class Dragon {
 	}
     
     public void pintar(){
-    	app.image(image, pos.x, pos.y);
+    	app.image(image, pos.x, pos.y-51);
+    	
+    	if (!turno) {
+			timerDragon = 0;
+		}
     	
     }
     
@@ -37,14 +43,32 @@ public class Dragon {
 		this.turno = turno;
 	}
     
+    public int getTimerDragon() {
+		return timerDragon;
+	}
+    
+    public void sumaTimerDragon() {
+		this.timerDragon++;
+	}
+    
+    public void setTimerDragon(int timerDragon) {
+		this.timerDragon = timerDragon;
+	}
     
     
-    public void mover(PVector nPos){
-    	pos = nPos;
+    public void moverPersona(Personita p){
+    	if (turno) {
+    		PVector nPos = p.getPos().copy();
+    		pos = nPos;
+    	}
     	
     }
+    
+    
     public Personita comer(Personita p){
-    	
+    	if (pos.equals(p.getPos())) {
+    		personasComidas.add(p);			
+		}
     	return p;
     }
     

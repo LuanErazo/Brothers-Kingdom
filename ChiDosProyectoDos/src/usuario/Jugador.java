@@ -60,7 +60,7 @@ public class Jugador implements Observer {
 				float y2 = y1 + 85;
 
 				if (mx > x1 && my > y1 && mx < x2 + 100 && my < y2) {
-					posLanzamiento.set(calculoGeneralX(i), calculoGeneralY()-71);
+					posLanzamiento.set(calculoGeneralX(i), calculoGeneralY() - 71);
 				}
 
 			}
@@ -68,8 +68,6 @@ public class Jugador implements Observer {
 		}
 
 	}
-	
-	
 
 	private static float calculoPosX(int i) {
 		float x1 = (26 + (104.5f * i));
@@ -78,17 +76,25 @@ public class Jugador implements Observer {
 
 	public static float calculoGeneralX() {
 		int i = posicionTabla();
-		return calculoPosX(i)+50;
+		return calculoPosX(i) + 50;
 
 	}
-	
+
 	public static float calculoGeneralX(int i) {
-		return calculoPosX(i)+50;
+		return calculoPosX(i) + 50;
 
 	}
-	
+
+	public static PVector vectorCalculo() {
+		return new PVector(calculoGeneralX(), calculoGeneralY() - 71);
+	}
+
+	public static PVector vectorCalculo(int i) {
+		return new PVector(calculoGeneralX(i), calculoGeneralY() - 71);
+	}
+
 	public static float calculoGeneralY() {
-		return (394+((394+85)-394)/2);
+		return (394 + ((394 + 85) - 394) / 2);
 
 	}
 
@@ -112,7 +118,6 @@ public class Jugador implements Observer {
 		String mensaje = (String) arg;
 
 	}
-
 
 	public Personita disparar() {
 		PVector posN = posLanzamiento.copy();

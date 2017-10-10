@@ -58,21 +58,23 @@ public class Dragon {
 	}
 
 	public boolean moverRan() {
-		int ran[] = new int[4];
-		for (int i = 0; i < ran.length; i++) {
-			if (i < 2) {
-				ran[i] = -1;
-			} else{
-				ran[i] = 1;
-			}
-		}
-		movpos += ran[(int) app.random(4)];
-		pos = Jugador.vectorCalculo(movpos);
+		PVector ran[] = new PVector[2];
+		
+		PVector antesPos = pos.copy();
+		float post = 25;
+		antesPos.set(((pos.x)-Jugador.calculoPosXSolo())+post, pos.y);
+
+		PVector postPos = pos.copy();
+		postPos.set(((pos.x)+Jugador.calculoPosXSolo())-post, pos.y);
+		ran[0] = antesPos;
+		ran[1] = postPos;
+		pos = ran[(int) app.random(2)];
 		return false;
 	}
 
 	public void moverPersona(Personita p) {
 		if (turno) {
+			System.out.println("dragon siguio");
 			PVector nPos = p.getPos().copy();
 			pos = nPos;
 		}
@@ -81,6 +83,10 @@ public class Dragon {
 
 	public void setMovpos(int movpos) {
 		this.movpos = movpos;
+	}
+	
+	public void setPos(PVector pos) {
+		this.pos = pos;
 	}
 
 	public Personita comer(Personita p) {

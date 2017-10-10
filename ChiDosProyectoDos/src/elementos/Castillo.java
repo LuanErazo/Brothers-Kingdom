@@ -64,12 +64,11 @@ public class Castillo {
 	}
 
 	public Personita disparar(PVector pos) {
+		personasVivas.getFirst().setNumPosGen(Jugador.posicionTabla());
 		Personita p = personasVivas.getFirst();
 		personasVivas.removeFirst();
 
-		int postabla = Jugador.posicionTabla();
 	
-		p.setNumPosGen(postabla);
 		p.setPos(pos);
 		return p;
 	}

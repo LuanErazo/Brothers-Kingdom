@@ -19,6 +19,9 @@ public class lServer implements Observer, Runnable {
 
 	private boolean conectado;
 	private boolean moviendo;
+	
+	//Cosas de control
+	private int contadorConciliaciones;
 
 	private ArrayList<Comunicacion> clientes = new ArrayList<>();
 
@@ -77,14 +80,33 @@ public class lServer implements Observer, Runnable {
 				clientes.remove(controladorCliente);
 				System.out.println("[Servidor] Tenemos: " + clientes.size() + " clientes");
 			}
-
-			if (mensaje.contains("values")) {
-				controladorCliente.enviarMensaje("id:" + clientes.size());
-				reenviarMensaje("mas", controladorCliente);
-			}
 			
-			if (mensaje.contains("cambioTurno")) {
+			if (mensaje.equals("cambioTurno")) {
+				reenviarMensaje(mensaje, controladorCliente);
+			}
+			if (mensaje.equals("cambioTurnoDragon")) {
 				reenviarMensajeTodos(mensaje);
+			}
+			if (mensaje.equals("conciliacion")) {
+				reenviarMensajeTodos(mensaje);
+			}
+			if (mensaje.contains("enviopos")) {
+				reenviarMensaje(mensaje,controladorCliente);
+			}
+			if (mensaje.contains("dragon")) {
+				reenviarMensajeTodos(mensaje);
+			}
+			if (mensaje.equals("conciliacion hecha")) {
+				contadorConciliaciones++;
+				if (contadorConciliaciones == 2) {
+					reenviarMensajeTodos(mensaje);
+					contadorConciliaciones = 0;
+				}
+				
+			}
+			if (mensaje.contains("posDragon")) {
+				reenviarMensaje(mensaje, controladorCliente);
+				
 			}
 		}
 
@@ -105,17 +127,11 @@ public class lServer implements Observer, Runnable {
 	
 	private void reenviarMensajeTodos(String mensaje) {
 		int reenvios = 0;
-//		for (Iterator<Comunicacion> iterator = clientes.iterator(); iterator.hasNext();) {
-//			Comunicacion com = (Comunicacion) iterator.next();
-//				com.enviarMensaje(mensaje);
-//				reenvios++;
-//
-//		}
-		for (int i = 0; i < clientes.size(); i++) {
-			Comunicacion com = (Comunicacion) clientes.get(i);
+		for (Iterator<Comunicacion> iterator = clientes.iterator(); iterator.hasNext();) {
+			Comunicacion com = (Comunicacion) iterator.next();
 			com.enviarMensaje(mensaje);
 			reenvios++;
-			
+
 		}
 		System.out.println("[Servidor] Se reenvia la nota a : " + reenvios + " clientes");
 	}

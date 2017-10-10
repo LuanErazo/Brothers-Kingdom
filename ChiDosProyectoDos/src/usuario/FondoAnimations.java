@@ -1,5 +1,7 @@
 package usuario;
 
+import java.time.temporal.JulianFields;
+
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PImage;
@@ -89,51 +91,104 @@ public class FondoAnimations {
 
 	}
 
-	public void textos(Jugador player) {
+	private void textoLocal(Jugador player) {
 		String isTurnoPUno = "Turno Jugador uno";
 		String isTurnoPDos = "Turno Jugador dos";
+		String isTuTurno = "Te toca escojer";
 		String turnoLocal = "";
 		String turnoOtro = "";
 		String nameRelated = "enviando a ";
-		app.textSize(15);
-		app.fill(0);
 
 		nameRelated = nameRelated.concat(player.getCastillo().nombrePersonaEnviada() + ", ");
 		nameRelated = nameRelated.concat(player.getCastillo().relacionPersonaEnviada());
-
+		int posX = 0;
+		int posY = 0;
+		
 		if (player.getJugador() == 1) {
 			chat = Carga.chatBubbleUno;
-			app.image(chat, 200, 300);
-			turnoLocal = isTurnoPUno;
+			posX = 200;
+			posY = 300;
+			turnoLocal = isTuTurno;
 			turnoOtro = isTurnoPDos;
-			app.text(nameRelated, 200, 300);
 
 		}
 		if (player.getJugador() == 2) {
 			chat = Carga.chatBubbleDos;
-
-			turnoLocal = isTurnoPDos;
+			posX = 1000;
+			posY = 300;
+			turnoLocal = isTuTurno;
 			turnoOtro = isTurnoPUno;
-			app.image(chat, 1000, 300);
-			app.text(nameRelated, 800, 300);
 
 		}
-		app.fill(255);
-		app.textAlign(PConstants.CENTER);
-		app.textSize(60);
-
+		
 		if (player.isTurnoPrincipal()) {
+			app.image(chat, posX, posY);
+			app.pushStyle();
+			app.textSize(15);
+			app.fill(0);
+			app.text(nameRelated, posX, posY);
+			app.popStyle();
 			app.text(turnoLocal, app.width / 2, (app.height / 2) - 200);
 		} else if (!player.isTurnoPrincipal() && !player.isTurnoConciliacion()) {
 			app.text(turnoOtro, app.width / 2, (app.height / 2) - 200);
 		}
 
-		if (player.isTurnoConciliacion()) {
+	}
+
+	private void textoConexion(Jugador playerSec) {
+		
+		String turnoLocal = "";
+		String turnoOtro = "";
+		String nameRelated = "enviando a ";
+
+		nameRelated = nameRelated.concat(playerSec.getCastillo().nombrePersonaEnviada() + ", ");
+		nameRelated = nameRelated.concat(playerSec.getCastillo().relacionPersonaEnviada());
+		
+		int posXOtrin = 0;
+		int posYOtrin = 0;
+
+		if (playerSec.getJugador() == 1) {
+			chat = Carga.chatBubbleUno;
+			posXOtrin = 200;
+			posYOtrin = 300;
+
+		}
+		if (playerSec.getJugador() == 2) {
+			chat = Carga.chatBubbleDos;
+			posXOtrin = 1000;
+			posYOtrin = 300;
+		}
+
+		app.fill(255);
+		app.textAlign(PConstants.CENTER);
+		app.textSize(60);
+
+		if (playerSec.isTurnoPrincipal()) {
+			app.image(chat, posXOtrin, posYOtrin);
+			app.pushStyle();
+			app.textSize(15);
+			app.fill(0);
+			app.text(nameRelated, posXOtrin, posYOtrin);
+			app.popStyle();
+			app.text(turnoLocal, app.width / 2, (app.height / 2) - 200);
+		} else if (!playerSec.isTurnoPrincipal() && !playerSec.isTurnoConciliacion()) {
+			app.text(turnoOtro, app.width / 2, (app.height / 2) - 200);
+		}
+
+		if (playerSec.isTurnoConciliacion()) {
 			app.text("Take a decition", app.width / 2, (app.height / 2) - 200);
 
 		}
 
 	}
+
+	public void textos(Jugador player, Jugador playerSec) {
+		textoLocal(player);
+		textoConexion(playerSec);
+	}
+	
+
+	
 
 	public void flecha(Jugador player) {
 		if (player.isTurnoPrincipal()) {

@@ -73,6 +73,10 @@ public class Jugador implements Observer {
 		float x1 = (26 + (104.5f * i));
 		return x1;
 	}
+	public static float calculoPosXSolo() {
+		float x1 = (26 + (104.5f));
+		return x1;
+	}
 
 	public static float calculoGeneralX() {
 		int i = posicionTabla();

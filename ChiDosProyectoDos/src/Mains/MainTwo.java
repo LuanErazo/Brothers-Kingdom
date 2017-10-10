@@ -15,7 +15,6 @@ public class MainTwo extends PApplet{
 	private static PApplet app;
 //	private LogicaTwo log;
 	private Logica loggi;
-	private ComunicacionCliente cliente;
 	
 	@Override
 	public void settings() {

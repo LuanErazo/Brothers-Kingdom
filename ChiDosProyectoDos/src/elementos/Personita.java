@@ -43,11 +43,14 @@ public class Personita {
 		} else {
 			image = hombre[(int) Math.random() * 3];
 		}
+		numPosGen = 2;
 
 	}
-	
-	
-	
+
+	public Personita(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -55,8 +58,6 @@ public class Personita {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -75,12 +76,10 @@ public class Personita {
 		return true;
 	}
 
-
-
-
 	public void setPos(PVector pos) {
 		this.pos = pos;
 	}
+
 	public PVector getPos() {
 		return pos;
 	}
@@ -92,7 +91,7 @@ public class Personita {
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getRelacion() {
 		return relacion;
 	}
@@ -100,15 +99,17 @@ public class Personita {
 	public void setNumPosGen(int numPosGen) {
 		this.numPosGen = numPosGen;
 	}
-	
+
 	public int getNumPosGen() {
 		return numPosGen;
 	}
+
 	public void pintar() {
-		
+
 		app.image(image, pos.x, pos.y);
 
 	}
+
 	public int getJugador() {
 		return jugador;
 	}

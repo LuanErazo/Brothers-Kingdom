@@ -19,13 +19,17 @@ public class lServer implements Observer, Runnable {
 
 	private boolean conectado;
 	private boolean moviendo;
-	
-	//Cosas de control
+
+	// Cosas de control
 	private int contadorConciliaciones;
+	private Boolean conciliacion[] = new Boolean[2];
+	private Integer playerNumCon[] = new Integer[2];
 
 	private ArrayList<Comunicacion> clientes = new ArrayList<>();
 
 	public lServer() {
+		conciliacion[0] = null;
+		conciliacion[1] = null;
 
 		try {
 			socketServidor = new ServerSocket(PORT);
@@ -80,7 +84,7 @@ public class lServer implements Observer, Runnable {
 				clientes.remove(controladorCliente);
 				System.out.println("[Servidor] Tenemos: " + clientes.size() + " clientes");
 			}
-			
+
 			if (mensaje.equals("cambioTurno")) {
 				reenviarMensaje(mensaje, controladorCliente);
 			}
@@ -91,22 +95,55 @@ public class lServer implements Observer, Runnable {
 				reenviarMensajeTodos(mensaje);
 			}
 			if (mensaje.contains("enviopos")) {
-				reenviarMensaje(mensaje,controladorCliente);
+				reenviarMensaje(mensaje, controladorCliente);
 			}
 			if (mensaje.contains("dragon")) {
 				reenviarMensajeTodos(mensaje);
 			}
-			if (mensaje.equals("conciliacion hecha")) {
+
+			if (mensaje.contains("ConciliacionHecha:")) {
 				contadorConciliaciones++;
+				String data[] = mensaje.split(":");
+
+				if (conciliacion[0] == null) {
+					conciliacion[0] = new Boolean(data[1]);
+					playerNumCon[0] = new Integer(Integer.parseInt(data[2]));
+				} else {
+					conciliacion[1] = new Boolean(data[1]);
+					playerNumCon[1] = new Integer(Integer.parseInt(data[2]));
+
+				}
+				String m = "ConciliacionHecha:";
+				String c = "ConciliacionUpdate:";
+
 				if (contadorConciliaciones == 2) {
-					reenviarMensajeTodos(mensaje);
+					for (int i = 0; i < playerNumCon.length; i++) {
+
+						if (playerNumCon[i].intValue() == 1) {
+							reenviarMensaje(m + conciliacion[i], clientes.get(1));
+						} else {
+							reenviarMensaje(c + conciliacion[i], clientes.get(1));
+
+						}
+						if (playerNumCon[i].intValue() == 2) {
+							reenviarMensaje(m + conciliacion[i], clientes.get(0));
+						} else {
+							reenviarMensaje(c + conciliacion[i], clientes.get(0));
+						}
+
+					}
+					conciliacion[0] = null;
+					playerNumCon[0] = null;
+					conciliacion[1] = null;
+					playerNumCon[1] = null;
 					contadorConciliaciones = 0;
 				}
-				
+
 			}
+
 			if (mensaje.contains("posDragon")) {
 				reenviarMensaje(mensaje, controladorCliente);
-				
+
 			}
 		}
 
@@ -124,7 +161,7 @@ public class lServer implements Observer, Runnable {
 		}
 		System.out.println("[Servidor] Se reenvia la nota a : " + reenvios + " clientes");
 	}
-	
+
 	private void reenviarMensajeTodos(String mensaje) {
 		int reenvios = 0;
 		for (Iterator<Comunicacion> iterator = clientes.iterator(); iterator.hasNext();) {

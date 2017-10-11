@@ -2,6 +2,7 @@ package usuario;
 
 import java.time.temporal.JulianFields;
 
+import elementos.Castillo;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PImage;
@@ -91,10 +92,12 @@ public class FondoAnimations {
 
 	}
 
-	private void textoLocal(Jugador player) {
+	private void textoLocal(Jugador player, int turnos) {
+		Castillo c = player.getCastillo();
+
 		String isTurnoPUno = "Turno Jugador uno";
 		String isTurnoPDos = "Turno Jugador dos";
-		String isTuTurno = "Te toca escojer";
+		String isTuTurno = "Te toca escojer, disparas o pasas";
 		String turnoLocal = "";
 		String turnoOtro = "";
 		String nameRelated = "enviando a ";
@@ -132,10 +135,27 @@ public class FondoAnimations {
 		} else if (!player.isTurnoPrincipal() && !player.isTurnoConciliacion()) {
 			app.text(turnoOtro, app.width / 2, (app.height / 2) - 200);
 		}
+		
+		float y = 200;
+		float yy = y-20;
+
+		app.pushStyle();
+		app.textSize(15);
+		app.text("ciudadanos", c.getPos().x, c.getPos().y+y);
+		app.text("turno", app.width / 2, (app.height / 2) + 230);
+		app.popStyle();
+		
+		app.text(c.getPersonasVivas().size(), c.getPos().x, c.getPos().y+yy);
+		
+		app.pushStyle();
+		app.textSize(100);
+		app.text(turnos, app.width / 2, (app.height / 2) + 210);
+		app.popStyle();
 
 	}
 
 	private void textoConexion(Jugador playerSec) {
+		Castillo c = playerSec.getCastillo();
 		
 		String turnoLocal = "";
 		String turnoOtro = "";
@@ -179,11 +199,20 @@ public class FondoAnimations {
 			app.text("Take a decition", app.width / 2, (app.height / 2) - 200);
 
 		}
+		float y = 200;
+		float yy = y-20;
+
+		app.pushStyle();
+		app.textSize(15);
+		app.text("ciudadanos", c.getPos().x, c.getPos().y+y);
+		app.popStyle();
+		
+		app.text(c.getPersonasVivas().size(), c.getPos().x, c.getPos().y+yy);
 
 	}
 
-	public void textos(Jugador player, Jugador playerSec) {
-		textoLocal(player);
+	public void textos(Jugador player, Jugador playerSec, int turnos) {
+		textoLocal(player, turnos);
 		textoConexion(playerSec);
 	}
 	

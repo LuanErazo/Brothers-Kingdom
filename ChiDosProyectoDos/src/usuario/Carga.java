@@ -33,7 +33,7 @@ public class Carga {
 		
 		
 		textoPjOne = app.loadStrings("../data/nombres jugador uno");
-		textoPjTwo = textoPjOne;
+		textoPjTwo = app.loadStrings("../data/nombres jugador dos");
 	}
 
 }

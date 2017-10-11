@@ -35,6 +35,7 @@ public class Logica implements Observer {
 	private Carga carga;
 	private Castillo castillo;
 	private boolean jugadorUno;
+	private int turnos;
 
 	public Logica(PApplet app, boolean jugadorUno) {
 		cliente = new ComunicacionCliente();
@@ -66,6 +67,7 @@ public class Logica implements Observer {
 
 		personasSueltas = new LinkedList<>();
 		dragon = new Dragon(app);
+		turnos = 1;
 
 	}
 
@@ -74,13 +76,13 @@ public class Logica implements Observer {
 		key();
 		playerSec.setTurnoPrincipal(!player.isTurnoPrincipal());
 		fondo.drawPintar(player);
-		fondo.textos(player, playerSec);
+		fondo.textos(player, playerSec, turnos);
 		app.imageMode(PConstants.CENTER);
 		dragon.pintar();
 		pintarObjects();
 
-		player.pintar();
-		playerSec.pintar();
+		// player.pintar();
+		// playerSec.pintar();
 
 		for (Personita personita : personasSueltas) {
 			personita.pintar();
@@ -119,7 +121,7 @@ public class Logica implements Observer {
 							Personita suelta = player.disparar();
 							por = suelta;
 							personasSueltas.addLast(suelta);
-
+							System.out.println("se crearon " + personasSueltas.size());
 							cliente.enviarMensaje(
 									"enviopos " + suelta.getName() + " " + suelta.getPos().x + " " + suelta.getPos().y);
 						} else {
@@ -133,6 +135,8 @@ public class Logica implements Observer {
 							Personita suelta = player.disparar();
 							por = suelta;
 							personasSueltas.addLast(suelta);
+							System.out.println("se crearon " + personasSueltas.size());
+
 							cliente.enviarMensaje(
 									"enviopos " + suelta.getName() + " " + suelta.getPos().x + " " + suelta.getPos().y);
 
@@ -166,18 +170,15 @@ public class Logica implements Observer {
 		if (player.isTurnoConciliacion()) {
 
 			if (fondo.IzqBoton(mx, my)) {
-				// if (personasSueltas.size() > 0) {
-				// Personita pp = perMinimDist(Jugador.calculoGeneralX(minVal),
-				// Jugador.calculoGeneralY());
-				// if (player.getJugador() != pp.getJugador()) {
-				// Personita p = castillo.recibir(pp);
-				// personasSueltas.remove(p);
-				// }
-				// }
 			}
 
 			if (fondo.DerBoton(mx, my) || fondo.IzqBoton(mx, my)) {
-				cliente.enviarMensaje("conciliacion hecha");
+				if (fondo.DerBoton(mx, my)) {
+					cliente.enviarMensaje("ConciliacionHecha:false:" + player.getJugador());
+
+				} else {
+					cliente.enviarMensaje("ConciliacionHecha:true:" + player.getJugador());
+				}
 				player.setTurnoPrincipal(false);
 				player.setTurnoConciliacion(false);
 
@@ -200,7 +201,6 @@ public class Logica implements Observer {
 			float dist = PApplet.dist(p.getPos().x, p.getPos().y, Xevalua, Yevalua);
 
 			float min = PApplet.min(distancias);
-			System.out.println(min);
 			if (min == dist) {
 				return p;
 			}
@@ -210,16 +210,18 @@ public class Logica implements Observer {
 	}
 
 	private void dragon() {
-		if (personasSueltas.size() > 0) {
-			System.out.println("personas suelstas tam: " + personasSueltas.size());
-			if (dragon.getTimerDragon() == 1) {
-				Personita p = perMinimDist(dragon.getPos().x, dragon.getPos().y);
-				dragon.moverPersona(p);
-				personasSueltas.remove(dragon.comer(p));
-				dragon.setTimerDragon(0);
-			}
-		} else {
-			if (!jugadorUno) {
+		if (!jugadorUno) {
+			if (personasSueltas.size() > 0) {
+				System.out.println("personas suelstas tam: " + personasSueltas.size());
+				if (dragon.getTimerDragon() == 1) {
+					Personita p = perMinimDist(dragon.getPos().x, dragon.getPos().y);
+					dragon.moverPersona(p);
+					personasSueltas.remove(dragon.comer(p));
+					cliente.enviarMensaje("posDragon " + dragon.getPos().x + " " + dragon.getPos().y);
+					app.delay(500);
+					dragon.setTimerDragon(0);
+				}
+			} else { // no hay personas dentro del arreglo general
 				dragon.setTurno(dragon.moverRan());
 				cliente.enviarMensaje("posDragon " + dragon.getPos().x + " " + dragon.getPos().y);
 				cliente.enviarMensaje("cambioTurnoDragon");
@@ -232,16 +234,17 @@ public class Logica implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		String mensaje = (String) arg;
-		if (mensaje.equals("conciliacion hecha")) {
+		if (mensaje.contains("ConciliacionHecha:")) {
+			String data[] = mensaje.split(":");
+			boolean bol = Boolean.parseBoolean(data[1]);
 
-			if (personasSueltas.size() > 0) {
-				Personita pp = perMinimDist(Jugador.calculoGeneralX(minVal), Jugador.calculoGeneralY());
-				if (player.getJugador() != pp.getJugador()) {
-					Personita p = castillo.recibir(pp);
-					personasSueltas.remove(p);
-				} else {
-					Personita p = playerSec.getCastillo().recibir(pp);
-					personasSueltas.remove(p);
+			if (bol) {
+				if (personasSueltas.size() > 0) {
+					Personita pp = perMinimDist(Jugador.calculoGeneralX(minVal), Jugador.calculoGeneralY());
+					if (player.getJugador() != pp.getJugador()) {
+						Personita p = castillo.recibir(pp);
+						personasSueltas.remove(p);
+					}
 				}
 			}
 			if (!jugadorUno) {
@@ -250,10 +253,41 @@ public class Logica implements Observer {
 
 		}
 
+		if (mensaje.contains("ConciliacionUpdate:")) {
+			// System.out.println("CONCILIACION UPDATE");
+			String data[] = mensaje.split(":");
+			boolean bol = Boolean.parseBoolean(data[1]);
+
+			if (bol) {
+
+				int minvalin = 10;
+
+				if (!jugadorUno) {
+					minvalin = 0;
+				}
+				if (personasSueltas.size() > 0) {
+					Personita pp = perMinimDist(Jugador.calculoGeneralX(minvalin), Jugador.calculoGeneralY());
+					System.out.println(playerSec.getJugador() + "comparacion con " + pp.getJugador());
+					if (playerSec.getJugador() != pp.getJugador()) {
+						Personita p = playerSec.getCastillo().recibir(pp);
+						personasSueltas.remove(p);
+					}
+				}
+			}
+		}
+
 		if (mensaje.contains("posDragon")) {
 			String data[] = mensaje.split(" ");
-			if (jugadorUno) {
+			if (jugadorUno && dragon.isTurno()) {
 				dragon.setPos(new PVector(Float.parseFloat(data[1]), Float.parseFloat(data[2])));
+				if (personasSueltas.size() > 0) {
+					for (int i = 0; i < personasSueltas.size(); i++) {
+						Personita p = personasSueltas.get(i);
+						if (dragon.getPos().equals(p.getPos())) {
+							personasSueltas.remove(dragon.comer(p));
+						}
+					}
+				}
 			}
 
 		}
@@ -278,15 +312,16 @@ public class Logica implements Observer {
 			if (jugadorUno) {
 				player.setTurnoPrincipal(true);
 			}
+			dragon.setTurno(false);
+			turnos++;
 		}
 
 		if (mensaje.contains("enviopos")) {
 			String datos[] = mensaje.split(" ");
-
+			Personita otro = new Personita(datos[1]);
 			for (int i = 0; i < playerSec.getCastillo().getPersonasVivas().size(); i++) {
 				Personita p = playerSec.getCastillo().getPersonasVivas().get(i);
-				Personita otro = new Personita(datos[1]);
-				if (p.equals(otro)) {
+				if (p.equals(otro) && p.getJugador() != player.getJugador()) {
 					System.out.println("son iguales");
 					PVector pos = new PVector(Float.parseFloat(datos[2]), Float.parseFloat(datos[3]));
 					p.setPos(pos);
@@ -351,7 +386,13 @@ public class Logica implements Observer {
 				dragon.setTurno(true);
 
 			}
-
+			if (app.key == '9') {
+				System.out.println("existen estas personas " + personasSueltas.size());
+				for (Personita personita : personasSueltas) {
+					System.out.println("se ecuentran personas del castilo " + personita.getJugador());
+				}
+			}
+			dragon.key();
 		}
 	}
 

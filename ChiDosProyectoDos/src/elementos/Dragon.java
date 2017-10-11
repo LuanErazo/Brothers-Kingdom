@@ -103,4 +103,14 @@ public class Dragon {
 	public PVector getPos() {
 		return pos;
 	}
+	
+	public void key(){
+		if (app.key == '0') {
+			System.out.println(personasComidas.size());
+			for (Personita personita : personasComidas) {
+				System.out.println("me comi a " + personita.getName() + " del jugador " + personita.getJugador());
+				
+			}
+		}
+	}
 }

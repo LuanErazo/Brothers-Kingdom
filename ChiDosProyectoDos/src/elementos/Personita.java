@@ -15,7 +15,6 @@ public class Personita {
 	private String name;
 	private String relacion;
 	private int jugador;
-	private int numPosGen;
 
 	public Personita(PApplet app, String info, int jugador, PVector pos) {
 		this.jugador = jugador;
@@ -43,7 +42,6 @@ public class Personita {
 		} else {
 			image = hombre[(int) Math.random() * 3];
 		}
-		numPosGen = 2;
 
 	}
 
@@ -96,13 +94,7 @@ public class Personita {
 		return relacion;
 	}
 
-	public void setNumPosGen(int numPosGen) {
-		this.numPosGen = numPosGen;
-	}
 
-	public int getNumPosGen() {
-		return numPosGen;
-	}
 
 	public void pintar() {
 

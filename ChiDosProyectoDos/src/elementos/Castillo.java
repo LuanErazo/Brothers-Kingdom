@@ -64,7 +64,6 @@ public class Castillo {
 	}
 
 	public Personita disparar(PVector pos) {
-		personasVivas.getFirst().setNumPosGen(Jugador.posicionTabla());
 		Personita p = personasVivas.getFirst();
 		personasVivas.removeFirst();
 
@@ -83,6 +82,10 @@ public class Castillo {
 
 	public Personita comer(Personita p) {
 		return null;
+	}
+	
+	public PVector getPos() {
+		return pos;
 	}
 
 }

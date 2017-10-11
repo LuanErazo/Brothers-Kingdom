@@ -3,9 +3,12 @@ package usuario;
 import java.time.temporal.JulianFields;
 
 import elementos.Castillo;
+import elementos.Dragon;
+import elementos.Personita;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PImage;
+import processing.core.PVector;
 
 public class FondoAnimations {
 
@@ -19,6 +22,10 @@ public class FondoAnimations {
 	private PImage letIn;
 	private PImage letOut;
 	private PImage flecha;
+
+	private PImage pGanar;
+	private PImage pInicio;
+	private PImage pPerder;
 
 	private float x = 340;
 	private float y = 600;
@@ -45,6 +52,10 @@ public class FondoAnimations {
 		flecha = app.loadImage("../data/img/flecha.png");
 		letIn = app.loadImage("../data/img/botones/letThemIn.png");
 		letOut = app.loadImage("../data/img/botones/leftOut.png");
+
+		pInicio = Carga.pInicio;
+		pGanar = Carga.pGanar;
+		pPerder = Carga.pPerder;
 
 	}
 
@@ -92,6 +103,57 @@ public class FondoAnimations {
 
 	}
 
+	public void pantallaFinal(int turnos, Jugador player, Jugador playerSec, Dragon dragon) {
+		if (turnos > 5) {
+			if (dragon.getPersonasComidas().size() == 0) {
+				app.image(pPerder, 0, 0);
+			} else {
+				int playerInt = 0;
+				int playerSecInt = 0;
+
+				for (int i = 0; i < dragon.getPersonasComidas().size(); i++) {
+					Personita p = dragon.getPersonasComidas().get(i);
+					if (p.getJugador() == 1) {
+						playerInt++;
+					}
+					if (p.getJugador() == 2) {
+						playerSecInt++;
+					}
+				}
+				if (playerInt == playerSecInt) {
+					app.image(pGanar, 0, 0);
+				} else if (playerInt > playerSecInt) {
+					app.image(pGanar, 0, 0);
+
+				} else if(playerInt < playerSecInt){
+					app.image(pPerder, 0, 0);
+				}
+
+			}
+
+		}
+
+		PVector finalPos = new PVector();
+		PVector finalPosSec = new PVector();
+
+		if (player.getJugador() == 1) {
+			finalPos = new PVector(Jugador.calculoGeneralX(0), Jugador.calculoGeneralY());
+			finalPosSec = new PVector(Jugador.calculoGeneralX(10), Jugador.calculoGeneralY());
+
+		}
+		if (player.getJugador() == 1) {
+			finalPos = new PVector(Jugador.calculoGeneralX(10), Jugador.calculoGeneralY());
+			finalPosSec = new PVector(Jugador.calculoGeneralX(0), Jugador.calculoGeneralY());
+
+		}
+		if (dragon.getPos().equals(finalPos)) {
+			app.image(pPerder, 0, 0);
+		}
+		if (dragon.getPos().equals(finalPosSec)) {
+			app.image(pGanar, 0, 0);
+		}
+	}
+
 	private void textoLocal(Jugador player, int turnos) {
 		Castillo c = player.getCastillo();
 
@@ -106,7 +168,7 @@ public class FondoAnimations {
 		nameRelated = nameRelated.concat(player.getCastillo().relacionPersonaEnviada());
 		int posX = 0;
 		int posY = 0;
-		
+
 		if (player.getJugador() == 1) {
 			chat = Carga.chatBubbleUno;
 			posX = 200;
@@ -123,7 +185,7 @@ public class FondoAnimations {
 			turnoOtro = isTurnoPUno;
 
 		}
-		
+
 		if (player.isTurnoPrincipal()) {
 			app.image(chat, posX, posY);
 			app.pushStyle();
@@ -135,18 +197,18 @@ public class FondoAnimations {
 		} else if (!player.isTurnoPrincipal() && !player.isTurnoConciliacion()) {
 			app.text(turnoOtro, app.width / 2, (app.height / 2) - 200);
 		}
-		
+
 		float y = 200;
-		float yy = y-20;
+		float yy = y - 20;
 
 		app.pushStyle();
 		app.textSize(15);
-		app.text("ciudadanos", c.getPos().x, c.getPos().y+y);
+		app.text("ciudadanos", c.getPos().x, c.getPos().y + y);
 		app.text("turno", app.width / 2, (app.height / 2) + 230);
 		app.popStyle();
-		
-		app.text(c.getPersonasVivas().size(), c.getPos().x, c.getPos().y+yy);
-		
+
+		app.text(c.getPersonasVivas().size(), c.getPos().x, c.getPos().y + yy);
+
 		app.pushStyle();
 		app.textSize(100);
 		app.text(turnos, app.width / 2, (app.height / 2) + 210);
@@ -156,14 +218,14 @@ public class FondoAnimations {
 
 	private void textoConexion(Jugador playerSec) {
 		Castillo c = playerSec.getCastillo();
-		
+
 		String turnoLocal = "";
 		String turnoOtro = "";
 		String nameRelated = "enviando a ";
 
 		nameRelated = nameRelated.concat(playerSec.getCastillo().nombrePersonaEnviada() + ", ");
 		nameRelated = nameRelated.concat(playerSec.getCastillo().relacionPersonaEnviada());
-		
+
 		int posXOtrin = 0;
 		int posYOtrin = 0;
 
@@ -200,14 +262,14 @@ public class FondoAnimations {
 
 		}
 		float y = 200;
-		float yy = y-20;
+		float yy = y - 20;
 
 		app.pushStyle();
 		app.textSize(15);
-		app.text("ciudadanos", c.getPos().x, c.getPos().y+y);
+		app.text("ciudadanos", c.getPos().x, c.getPos().y + y);
 		app.popStyle();
-		
-		app.text(c.getPersonasVivas().size(), c.getPos().x, c.getPos().y+yy);
+
+		app.text(c.getPersonasVivas().size(), c.getPos().x, c.getPos().y + yy);
 
 	}
 
@@ -215,9 +277,6 @@ public class FondoAnimations {
 		textoLocal(player, turnos);
 		textoConexion(playerSec);
 	}
-	
-
-	
 
 	public void flecha(Jugador player) {
 		if (player.isTurnoPrincipal()) {

@@ -104,6 +104,10 @@ public class Dragon {
 		return pos;
 	}
 	
+	public LinkedList<Personita> getPersonasComidas() {
+		return personasComidas;
+	}
+	
 	public void key(){
 		if (app.key == '0') {
 			System.out.println(personasComidas.size());

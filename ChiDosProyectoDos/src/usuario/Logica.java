@@ -36,6 +36,7 @@ public class Logica implements Observer {
 	private Castillo castillo;
 	private boolean jugadorUno;
 	private int turnos;
+	private boolean finall;
 
 	public Logica(PApplet app, boolean jugadorUno) {
 		cliente = new ComunicacionCliente();
@@ -92,6 +93,8 @@ public class Logica implements Observer {
 		if (dragon.isTurno()) {
 			dragon();
 		}
+		if(finall)fondo.pantallaFinal(turnos, player, playerSec, dragon);
+	
 	}
 
 	public void click(float mx, float my) {
@@ -391,6 +394,9 @@ public class Logica implements Observer {
 				for (Personita personita : personasSueltas) {
 					System.out.println("se ecuentran personas del castilo " + personita.getJugador());
 				}
+			}
+			if (app.key =='q') {
+				finall = true;
 			}
 			dragon.key();
 		}

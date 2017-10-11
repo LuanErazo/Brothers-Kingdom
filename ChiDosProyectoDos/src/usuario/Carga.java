@@ -37,7 +37,7 @@ public class Carga {
 		
 		pGanar = app.loadImage("../data/img/pantallas/youWin.png");
 		pPerder = app.loadImage("../data/img/pantallas/youLose.png");
-		pInicio = app.loadImage("../data/img/pantallas/StratScreen.png");
+		pInicio = app.loadImage("../data/img/pantallas/StartScreen.png");
 
 		textoPjOne = app.loadStrings("../data/nombres jugador uno");
 		textoPjTwo = app.loadStrings("../data/nombres jugador dos");

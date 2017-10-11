@@ -39,8 +39,7 @@ public class Castillo {
 				personasVivas.add(new Personita(app, texto[i], player, pos));
 
 			}
-		}
-
+		} 
 		prepos = pos.copy();
 	}
 

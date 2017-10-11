@@ -104,6 +104,8 @@ public class FondoAnimations {
 	}
 
 	public void pantallaFinal(int turnos, Jugador player, Jugador playerSec, Dragon dragon) {
+		app.pushStyle();
+		app.imageMode(PConstants.CORNER);
 		if (turnos > 5) {
 			if (dragon.getPersonasComidas().size() == 0) {
 				app.image(pPerder, 0, 0);
@@ -130,15 +132,15 @@ public class FondoAnimations {
 				}
 
 			}
-
+			app.popStyle();
 		}
 
 		PVector finalPos = new PVector();
 		PVector finalPosSec = new PVector();
 
 		if (player.getJugador() == 1) {
-			finalPos = new PVector(Jugador.calculoGeneralX(0), Jugador.calculoGeneralY());
-			finalPosSec = new PVector(Jugador.calculoGeneralX(10), Jugador.calculoGeneralY());
+			finalPos.set(Jugador.calculoGeneralX(0), Jugador.calculoGeneralY());
+			finalPosSec.set(Jugador.calculoGeneralX(10), Jugador.calculoGeneralY());
 
 		}
 		if (player.getJugador() == 1) {
@@ -152,6 +154,8 @@ public class FondoAnimations {
 		if (dragon.getPos().equals(finalPosSec)) {
 			app.image(pGanar, 0, 0);
 		}
+		app.image(pInicio, 0, 0);
+		
 	}
 
 	private void textoLocal(Jugador player, int turnos) {
